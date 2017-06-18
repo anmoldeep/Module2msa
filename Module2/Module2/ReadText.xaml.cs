@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -19,6 +20,7 @@ namespace Module2
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ReadText : ContentPage
     {
+        
         const string subscriptionKey = "fce13dd0420d486792458e1b3309d5c8";
         const string uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze";
        
@@ -34,7 +36,6 @@ namespace Module2
 
         private async void loadCamera(object sender, EventArgs e)
         {
-
             await CrossMedia.Current.Initialize();
             // check camera permissions and availibility
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -52,13 +53,20 @@ namespace Module2
             // display image
             if (file == null)
                 return;
-
+              
             //     image.Source = ImageSource.FromStream(() =>
             //   {
             //        return file.GetStream();
             //    });
+           // await DisplayAlert("Loading", "Loading . . .", "OK");
 
             OcrResults text;
+            // show loading
+            activityindicator.IsRunning = true;
+            activityindicator.IsVisible = true;
+
+            ocrprint.Text = "Loading . . .";
+            translateprint.Text = "Loading . . .";
 
             var client = new VisionServiceClient("fce13dd0420d486792458e1b3309d5c8", "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0");
 
@@ -81,9 +89,12 @@ namespace Module2
             string translated = await TranslateTextAsync(RecognizedText, LangCode);
             // Print Translated Text
             translateprint.Text = translated;
+            // hide loading
+            activityindicator.IsRunning = false;
+            activityindicator.IsVisible = false;
         }
 
-        // Fucntion to retrieve OCR text
+        // Function to retrieve OCR text
         public string retrieveocr(OcrResults text)
         {
             /// <summary>

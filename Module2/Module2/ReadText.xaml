@@ -17,8 +17,6 @@
                         <x:String>German</x:String>
                         <x:String>Korean</x:String>
                         <x:String>Spanish</x:String>
-
-
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
@@ -29,7 +27,12 @@
             <Label FontSize="Large" Text="Translated Text: "></Label>
 
             <Label FontSize="Large" x:Name="translateprint"></Label>
+            <ActivityIndicator x:Name="activityindicator" Color="Red" IsRunning="False" IsVisible="False"/>
 
         </StackLayout>
+
+      
+
+
     </ContentPage.Content>
 </ContentPage>

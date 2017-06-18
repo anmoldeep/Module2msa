@@ -1,14 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="microsoft.app.com" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="microsoft.app.com" android:installLocation="auto" android:versionCode="1">
 	<uses-sdk android:minSdkVersion="15" />
 	<application android:label="Module2.Android">
-    <provider android:name="android.support.v4.content.FileProvider"
-                android:authorities="microsoft.app.com.fileprovider"
-                android:exported="false"
-                android:grantUriPermissions="true">
-      <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-          android:resource="@xml/file_paths"></meta-data>
-    </provider>
-    
-  </application>
+		<provider android:name="android.support.v4.content.FileProvider" android:authorities="microsoft.app.com.fileprovider" android:exported="false" android:grantUriPermissions="true">
+			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
+		</provider>
+	</application>
 </manifest>
