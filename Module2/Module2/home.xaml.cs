@@ -15,6 +15,7 @@ namespace Module2
         public home()
         {
             InitializeComponent();
+           
         }
     }
 }

@@ -1,12 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Module2.ReadText">
+             x:Class="Module2.ReadText" Title="OCR Translator">
     <ContentPage.Content>
         <StackLayout Margin="20" Orientation="Vertical">
-            <Button Text="Take Photo and Analyze" Clicked="loadCamera" />
+
+            <Label FontSize="Medium" x:Name="select_lang" Text="Select Language"></Label>
+
+            <Picker x:Name="langpicker" Title="Select Target Language" SelectedIndex="1">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Chinese</x:String>
+                        <x:String>Hindi</x:String>
+                        <x:String>English</x:String>
+                        <x:String>French</x:String>
+                        <x:String>German</x:String>
+                        <x:String>Korean</x:String>
+                        <x:String>Spanish</x:String>
+
+
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Button Text="Take Photo and Translate" Clicked="loadCamera" />
+            <Label FontSize="Large" Text="Recognized Text: "></Label>
             <Label FontSize="Large" x:Name="ocrprint"></Label>
-           
+            <Label FontSize="Large" Text="Translated Text: "></Label>
+
+            <Label FontSize="Large" x:Name="translateprint"></Label>
 
         </StackLayout>
     </ContentPage.Content>

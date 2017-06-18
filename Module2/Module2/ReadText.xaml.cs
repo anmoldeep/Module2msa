@@ -20,15 +20,17 @@ namespace Module2
     public partial class ReadText : ContentPage
     {
         const string subscriptionKey = "fce13dd0420d486792458e1b3309d5c8";
-                const string uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze";
-
+        const string uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze";
+       
 
         public ReadText()
         {
             InitializeComponent();
+            // Set Picker Default value to Chinese
+            langpicker.SelectedIndex = 0;
         }
 
-     
+
 
         private async void loadCamera(object sender, EventArgs e)
         {
@@ -64,18 +66,21 @@ namespace Module2
             using (var stream = file.GetStream())
                 text = await client.RecognizeTextAsync(stream);
 
-         // create object for retrieving text
+            // create object for retrieving text
             ReadText x = new ReadText();
-         // store recognized string in variable
+            // store recognized string in variable
             var RecognizedText = x.retrieveocr(text);
             // Display on screen
             ocrprint.Text = RecognizedText;
             //Start Translate Text
             // First Get the token
             string token = await x.FetchTokenAsync("https://api.cognitive.microsoft.com/sts/v1.0", "6c67eee6ba7e4ff094dab7d1ff498797");
-
-            string translated = await TranslateTextAsync(RecognizedText);
-            await DisplayAlert("s", translated, "Ok");
+            // Get language Input and Generate Language Code
+            var LangCode = LanguageInput();
+            // Invoke Translation method with API
+            string translated = await TranslateTextAsync(RecognizedText, LangCode);
+            // Print Translated Text
+            translateprint.Text = translated;
         }
 
         // Fucntion to retrieve OCR text
@@ -90,7 +95,7 @@ namespace Module2
             StringBuilder stringBuilder = new StringBuilder();
             if (results != null && results.Regions != null)
             {
-                stringBuilder.Append("Translated Text:");
+                stringBuilder.Append("Hello how are you");
                 stringBuilder.AppendLine();
                 foreach (var item in results.Regions)
                 {
@@ -110,28 +115,16 @@ namespace Module2
             }
             return stringBuilder.ToString();
         }
-
-        // dummy function
-      /*  private async void Button_Clicked(object sender, EventArgs e)
-        {
-            ReadText x = new ReadText();
-            string token = await x.FetchTokenAsync("https://api.cognitive.microsoft.com/sts/v1.0","6c67eee6ba7e4ff094dab7d1ff498797");
-            
-        }*/
-
-        
-
         // invoke translation
-        public async Task<string> TranslateTextAsync(string text)
+        public async Task<string> TranslateTextAsync(string text, string lang)
         {
-  
-            string requestUri = GenerateRequestUri("https://api.microsofttranslator.com/v2/http.svc/Translate", text, "hi");
+
+            string requestUri = GenerateRequestUri("https://api.microsofttranslator.com/v2/http.svc/Translate", text, lang);
             string accessToken = await FetchTokenAsync("https://api.cognitive.microsoft.com/sts/v1.0", "6c67eee6ba7e4ff094dab7d1ff498797");
             var response = await SendRequestAsync(requestUri, accessToken);
             var xml = XDocument.Parse(response);
             return xml.Root.Value;
         }
-
         //Generate URL Request
         string GenerateRequestUri(string endpoint, string text, string to)
         {
@@ -163,8 +156,40 @@ namespace Module2
                 return await response.Content.ReadAsStringAsync();
             }
         }
+        // Generate Language code
+        public string LanguageInput()
+        {
+            var lang_code = "";
+            // get current selection of language
+            var selected_lang = langpicker.SelectedIndex;
+            switch (selected_lang)
+            {
+                case 0:
+                    lang_code = "zh-CHS";
+                    return lang_code;
+                case 1:
+                    lang_code = "hi";
+                    return lang_code;
+                case 3:
+                    lang_code = "fr";
+                    return lang_code;
+                case 4:
+                    lang_code = "en";
+                    return lang_code;
+                case 5:
+                    lang_code = "fr";
+                    return lang_code;
+                case 6:
+                    lang_code = "de";
+                    return lang_code;
+                case 7:
+                    lang_code = "es";
+                    return lang_code;
+                    }
+            return lang_code;
+        }
 
-
+        
     }
 }
 
