@@ -13,7 +13,7 @@ namespace Module2
         {
             InitializeComponent();
 
-            MainPage = new Module2.MainPage();
+            MainPage = new Module2.home();
         }
 
         protected override void OnStart()
