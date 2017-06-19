@@ -13,14 +13,20 @@ using System.Xml.Linq;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using Microsoft.WindowsAzure.MobileServices;
+using Module2.Models;
 
 namespace Module2
 {
+
+
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ReadText : ContentPage
     {
-        
+        // Initialize Database
+        MobileServiceClient client = AzureManager.AzureManagerInstance.AzureClient;
+
+
         const string subscriptionKey = "fce13dd0420d486792458e1b3309d5c8";
         const string uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze";
        
@@ -58,29 +64,47 @@ namespace Module2
             //   {
             //        return file.GetStream();
             //    });
-           // await DisplayAlert("Loading", "Loading . . .", "OK");
 
             OcrResults text;
             // show loading
             activityindicator.IsRunning = true;
             activityindicator.IsVisible = true;
 
-            ocrprint.Text = "Loading . . .";
-            translateprint.Text = "Loading . . .";
+            ocrprint.Text = "Now Recognizing Text . . . .";
 
             var client = new VisionServiceClient("fce13dd0420d486792458e1b3309d5c8", "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0");
 
             // initiate call to Custom Vision API
             using (var stream = file.GetStream())
                 text = await client.RecognizeTextAsync(stream);
-
+            // Store value of recognized language
+            var RecognizedLanguage = text.Language;
             // create object for retrieving text
             ReadText x = new ReadText();
             // store recognized string in variable
             var RecognizedText = x.retrieveocr(text);
+
             // Display on screen
-            ocrprint.Text = RecognizedText;
-            //Start Translate Text
+            if (RecognizedText == "")
+            {
+                ocrprint.Text = "Nothing Recognized. Try Again";
+                translateprint.Text = "";
+                activityindicator.IsVisible = false;
+                return;
+            }
+            if(RecognizedLanguage == langpicker.SelectedItem.ToString())
+            {
+                ocrprint.Text = "Target Language is same as recognized Language. Try Again";
+                translateprint.Text = "";
+                activityindicator.IsVisible = false;
+                return;
+            }
+            else
+            {
+                ocrprint.Text = RecognizedText;
+                translateprint.Text = "Now Translating . . .";
+            }
+            // Start Translate Text
             // First Get the token
             string token = await x.FetchTokenAsync("https://api.cognitive.microsoft.com/sts/v1.0", "6c67eee6ba7e4ff094dab7d1ff498797");
             // Get language Input and Generate Language Code
@@ -89,9 +113,15 @@ namespace Module2
             string translated = await TranslateTextAsync(RecognizedText, LangCode);
             // Print Translated Text
             translateprint.Text = translated;
+            // Add to DataBase
+            AddToDatabase(ocrprint.Text,RecognizedLanguage,langpicker.SelectedItem.ToString(),translateprint.Text);
+            // show labels
+            L1.IsVisible = true;
+            L2.IsVisible = true;
+
             // hide loading
-            activityindicator.IsRunning = false;
             activityindicator.IsVisible = false;
+            
         }
 
         // Function to retrieve OCR text
@@ -106,8 +136,8 @@ namespace Module2
             StringBuilder stringBuilder = new StringBuilder();
             if (results != null && results.Regions != null)
             {
-                stringBuilder.Append("Hello how are you");
-                stringBuilder.AppendLine();
+                //stringBuilder.Append("Hello how are you");
+                //stringBuilder.AppendLine();
                 foreach (var item in results.Regions)
                 {
                     foreach (var line in item.Lines)
@@ -118,10 +148,8 @@ namespace Module2
                             stringBuilder.Append(" ");
                         }
 
-                        stringBuilder.AppendLine();
                     }
 
-                    stringBuilder.AppendLine();
                 }
             }
             return stringBuilder.ToString();
@@ -200,7 +228,29 @@ namespace Module2
             return lang_code;
         }
 
-        
-    }
+        // Add to Database
+        public async void AddToDatabase(string r,string lt,string lf, string t)
+        {
+         //check if the textbox are not empty
+         if (ocrprint.Text == "" || translateprint.Text == "")
+            {
+                await DisplayAlert("Error", "Could not add to Database", "Ok");
+            }
+            // get values of the texts
+            string recognized = r;
+            string languageto = lt;
+            string languagefrom = lf;
+            string translated = t;
+
+            TranslatorModel model = new TranslatorModel()
+            {
+                Recognized = recognized,LanguageFrom=languageto,LanguageTo=languagefrom,Translated = translated
+
+            };
+            await AzureManager.AzureManagerInstance.PostTranslatorInformation(model);
+
+        }
+
+        }
 }
 

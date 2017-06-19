@@ -20,15 +20,19 @@
                     </x:Array>
                 </Picker.ItemsSource>
             </Picker>
-
             <Button Text="Take Photo and Translate" Clicked="loadCamera" />
-            <Label FontSize="Large" Text="Recognized Text: "></Label>
-            <Label FontSize="Large" x:Name="ocrprint"></Label>
-            <Label FontSize="Large" Text="Translated Text: "></Label>
 
-            <Label FontSize="Large" x:Name="translateprint"></Label>
+            <ScrollView>
+                <StackLayout>
+
+            <Label FontSize="Large" Text="Recognized Text: " IsVisible="False" x:Name="L1"></Label>
+            <Label FontAttributes="Bold" FontSize="Large" x:Name="ocrprint"></Label>
+
+            <Label FontSize="Large" Text="Translated: " IsVisible="False" x:Name="L2"></Label>
+            <Label FontAttributes="Bold" FontSize="Large" x:Name="translateprint"></Label>
             <ActivityIndicator x:Name="activityindicator" Color="Red" IsRunning="False" IsVisible="False"/>
-
+                </StackLayout>
+            </ScrollView>
         </StackLayout>
 
       

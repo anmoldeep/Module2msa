@@ -5,6 +5,7 @@ using System.Text;
 
 using Xamarin.Forms;
 
+
 namespace Module2
 {
     public partial class App : Application
@@ -14,6 +15,7 @@ namespace Module2
             InitializeComponent();
 
             MainPage = new Module2.home();
+          
         }
 
         protected override void OnStart()

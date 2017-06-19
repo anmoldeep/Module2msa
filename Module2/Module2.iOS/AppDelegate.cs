@@ -5,6 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
+
 namespace Module2.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -22,10 +23,19 @@ namespace Module2.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+
+           
+
             global::Xamarin.Forms.Forms.Init();
+
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+            SQLitePCL.Batteries.Init();
+
             LoadApplication(new App());
 
-            return base.FinishedLaunching(app, options);
+          return base.FinishedLaunching(app, options);
+
+           
         }
     }
 }

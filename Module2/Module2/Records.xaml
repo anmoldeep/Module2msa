@@ -1,10 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Module2.Records">
+             x:Class="Module2.Records" Title="OCR Translator History">
+       <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness" iOS="0, 20, 0, 0" />
+    </ContentPage.Padding>
     <ContentPage.Content>
+        
         <StackLayout>
-            <Label Text="Welcome to Xamarin Forms!" />
+            <ListView x:Name="TList" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical">
+                                <Label Text="{Binding Recognized, StringFormat='Recognized Text: {0:N}'}" HorizontalOptions="FillAndExpand" Margin="20,10,0,0" VerticalTextAlignment="Center" />
+                                <Label Text="{Binding LanguageFrom, StringFormat='Language: {0:N}'}" HorizontalOptions="FillAndExpand" Margin="20,0,0,0" VerticalTextAlignment="Center" />
+                                <Label Text="{Binding LanguageTo, StringFormat='Translated to: {0:N}'}" HorizontalOptions="FillAndExpand" Margin="20,0,0,0" VerticalTextAlignment="Center" />
+                                <Label Text="{Binding Translated, StringFormat='Translation: {0:N}'}" HorizontalOptions="FillAndExpand" Margin="20,0,0,10" VerticalTextAlignment="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Text="Update History" TextColor="White" BackgroundColor="Red" Clicked="Handle_ClickedAsync" />
+
+            <ActivityIndicator x:Name="loading" IsRunning="false" />
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
