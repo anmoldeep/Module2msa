@@ -251,6 +251,32 @@ namespace Module2
 
         }
 
-        }
+      /*  private async void langpicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ocrprint.Text != "")
+            {
+                activityindicator.IsVisible = true;
+                // Start Translate Text
+                // First Get the token
+                ReadText y = new ReadText();
+                string token = await y.FetchTokenAsync("https://api.cognitive.microsoft.com/sts/v1.0", "6c67eee6ba7e4ff094dab7d1ff498797");
+                // Get language Input and Generate Language Code
+                var LangCode = LanguageInput();
+                // Invoke Translation method with API
+                string translated = await TranslateTextAsync(ocrprint.Text, LangCode);
+                // Print Translated Text
+                translateprint.Text = translated;
+                // Add to DataBase
+                // AddToDatabase(ocrprint.Text, RecognizedLanguage, langpicker.SelectedItem.ToString(), translateprint.Text);
+                // show labels
+                // hide loading
+                activityindicator.IsVisible = false;
+            }
+            else
+            {
+                return;
+            }
+        }*/
+    }
 }
 
